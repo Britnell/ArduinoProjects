@@ -70,7 +70,7 @@ void timer_clock_sel(){
 
 void waveform_gen_mode(){
    
-   CLEAR TCCR1B, 4);    // WGM13
+   CLEAR(TCCR1B, 4);    // WGM13
      SET( TCCR1B, 3);    // WGM12  = CTC bit
        CLEAR( TCCR1A, 1);      // WGM11
          CLEAR( TCCR1A, 0);    // WGM10
@@ -82,9 +82,9 @@ void setup(){
 cli();//stop interrupts
 
 //set timer0 interrupt at 2kHz
-  TCCR0A = 0;// set entire TCCR0A register to 0
-  TCCR0B = 0;// same for TCCR0B
-  TCNT0  = 0;//initialize counter value to 0
+  TCCR0A = 0;  // set entire TCCR0A register to 0
+  TCCR0B = 0;  // same for TCCR0B
+  TCNT0  = 0;  //initialize counter value to 0
   // set compare match register for 2khz increments
   OCR0A = 124;// = (16*10^6) / (2000*64) - 1 (must be <256)
   // turn on CTC mode
@@ -124,4 +124,10 @@ cli();//stop interrupts
 sei();//allow interrupts
 
 }//end setup
+
+void loop()
+{
+
+  
+}
 

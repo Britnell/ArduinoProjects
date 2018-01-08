@@ -3,7 +3,7 @@
  *  
  *  reading, calculating & evaluation cap touch pads 
  *      tested with 4 buttons : A0 to A3
- *      Sending F7 / F8 key-presses for each step
+ *      Sending Mousewheel signal to scroll
  *      between and from keys
  *      step layout with 2 intermediate steps between two keys.
  *      thus 10 steps in total
@@ -11,6 +11,8 @@
  */
 
 #include <ADCTouch.h>
+#include <Mouse.h>
+#include <Keyboard.h>
 
 #define THRESHOLD   100
 #define PADS        4
@@ -170,7 +172,10 @@ void loop()
     float  diff = finger -l_finger;
     
     if( ( diff > 0) && (diff <= 1.0) )     // || (finger -l_finger>=3) )
-      FUNC_F(8);      
+    {
+      //FUNC_F(7);
+      Mouse.move(0,0,1);
+    }
 
     if( diff >=3.0)
       FUNC_F(7);
@@ -181,12 +186,13 @@ void loop()
       Mouse.move(0,0,-1);
     }
       
-
+    /*
     if( diff <= -3.0)
     {
       //FUNC_F(8);
       Mouse.move(0,0,1);
     }
+    */
     
     slider = finger - i_finger;
 

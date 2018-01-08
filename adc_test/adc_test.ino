@@ -2,6 +2,7 @@
  * Some example and Test code for running hardware C 
  *   on ATmega328
  */
+ 
 #include "Arduino.h"
 
 #define TRUE     1
@@ -12,7 +13,7 @@
 
 #define USE_C    TRUE
 
-#define VREF    3.3
+#define VREF    5.0
 
 #define led_pin   5
 #define adc_pin   0
@@ -26,7 +27,6 @@ float get_adc(float v){
   return ( ( v * 255) / VREF );        }
 
 
-  
 // HW pin D-6
 // arduino pin dig 6
 
@@ -52,17 +52,17 @@ void cereaf(String Msg, float Var);
 /*    ***   Setup                */
 
 void setup() {
-  //
+  //   Vars :
   // led_pin 
   // adc_pin 
 
-  // put your setup code here, to run once:
   SET(DDRD, led_pin);   //DDRD |= (1<<led_pin);
   
   //   -  ADC 1
   ADC_Setup();
   
-  ADC_channel_select( adc_pin );
+  //ADC_channel_select( adc_pin );
+  
   //    - ADC 2
   ADC_Enable();
 
@@ -82,13 +82,17 @@ void loop() {
   //CLEAR(PORTD, led_pin);
   
   //    -  ADC  3
-  num = ADC_readpin( );
-  ff = get_volt(num);
-  
-  cereal("\nADC is ", num);
-  cereaf("\tV   is ", ff  );
+  for( int a=0; a<6; a++) {
+    num = ADC_read(a);
+    ff = get_volt(num);
+
+    cereal("\n ADC pin ", a);
+    cereal(" , val= ", num);
+    cereaf(" ~ Volt ", ff  );
+  }
   
   CLEAR(PORTD, led_pin);
+  delay(500);
 } // Eo loop
 
 
@@ -101,7 +105,7 @@ void loop() {
 
 
 
-
+// Read ADC from last selected / used ADC pin / channel
 int ADC_readpin( ){
   
   int adc;
@@ -126,7 +130,7 @@ int ADC_readpin( ){
   return adc;
 }
 
-
+// read ADC channel X
 int ADC_read( int Pin ){
   
   int adc;
@@ -153,7 +157,6 @@ int ADC_read( int Pin ){
   
   return adc;
 }
-
 
 void ADC_Setup( ){
     /*   AREF :   
@@ -242,6 +245,7 @@ void ADC_channel_select( int ch){
   
 } // Eo ADC channel select
 
+// Start conversion, for manual or auto-trigger mode
 void ADC_start_conversion( ){
   
   //ADC_channel_select( Pin );
@@ -260,7 +264,6 @@ void ADC_Enable(){
 }
 
 void ADC_Disable(){
-  
     /*    Disable ADC
      *    clear ADEN in reg ADCSRA
      */

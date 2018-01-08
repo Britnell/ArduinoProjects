@@ -20,8 +20,9 @@
 #define CLEAR(num, bits)    num &= ~(1<<bits)
 
 #include <ADCTouch.h>
+#include <Keyboard.h>
 
-int debug = 1;
+int debug = 0;
 
 int ref0;     //reference values to remove offset
 char buff[50];
@@ -127,6 +128,7 @@ void loop()
           }
 
           switch(tap){
+            // Signals here
             // s | s
             // 000
             case 0:
@@ -194,6 +196,7 @@ void loop()
     // no delay(50);
     // Eo loop()  
 } 
+
 
 /*  Kets
  *   KEY_F1   0xC2  194 = 1 + 193

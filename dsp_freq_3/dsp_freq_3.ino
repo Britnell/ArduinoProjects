@@ -21,11 +21,10 @@
 #define led_set   DDRB
 
 #define adc_pin   0
-  
+
   
 float get_volt(int adc){
   return ( ( VREF * adc ) / 255 );     }
-
 
 float get_adc(float v){
   return ( ( v * 255) / VREF );        }
@@ -38,21 +37,13 @@ float get_adc(float v){
 
 /* *** Function declarations          */
 void ADC_channel_select( int ch);
-
 void ADC_Setup( );
-
 int ADC_read( int Pin );
-
 void ADC_start_conversion(  );
-
 void ADC_Enable();
-
 void ADC_Disable();
-
 void cereal(String Msg, int Var);
-
 void cereaf(String Msg, float Var);
-
 
 
 // #################################
@@ -86,7 +77,7 @@ void setup(){
   ADC_Setup();
   
   ADC_channel_select( adc_pin );
-  //    - ADC 2
+  
   ADC_Enable();
 
   count = 0;
@@ -98,11 +89,12 @@ void setup(){
   cereal("\n LENGTH is ", LENGTH);  
 
 }
+
+
 int period;
 long start_sampl;
 
 void loop(){
-  
   
   if (count < LENGTH) {
     // collest 512 samples for AutoCorrel.
@@ -285,8 +277,8 @@ void ADC_Setup( ){
      *    >> 16 MHz / 64 = 250 kHz
      */
     // >> ADC at 4 MHz
-    CLEAR(ADCSRA, 0);   
-    SET(ADCSRA, 1);
+    SET(ADCSRA, 0);   
+    CLEAR(ADCSRA, 1);
     CLEAR(ADCSRA, 2);
     
     //ADC_Enable();
