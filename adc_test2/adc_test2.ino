@@ -70,6 +70,8 @@ void setup() {
   Serial.println("Setup complete");
 }
 
+int a = 0;
+
 /*    ***   Setup                */
 void loop() {
   int num;
@@ -82,14 +84,14 @@ void loop() {
   //CLEAR(PORTD, led_pin);
   
   //    -  ADC  3
-  for( int a=0; a<6; a++) {
+  
     num = ADC_read(a);
     ff = get_volt(num);
 
-    cereal("\n ADC pin ", a);
+    //cereal("\n ADC pin ", a);
     cereal(" , val= ", num);
-    cereaf(" ~ Volt ", ff  );
-  }
+    //cereaf(" ~ Volt ", ff  );
+  
   
   //CLEAR(PORTD, led_pin);
   //delay(500);
@@ -168,8 +170,8 @@ void ADC_Setup( ){
     *   1        1         Internal 1.1V
     */
     // AREF = Vcc   ( 3 / 5 V )
-    CLEAR(ADMUX, 6);
-    CLEAR(ADMUX, 7);
+    SET(ADMUX, 6);
+    SET(ADMUX, 7);
     
     /*   Left ADJUST
     *     ADLAR = 1
