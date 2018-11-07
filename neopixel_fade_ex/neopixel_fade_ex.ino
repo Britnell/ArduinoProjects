@@ -21,7 +21,7 @@
 // When we setup the NeoPixel library, we tell it how many pixels, and which pin to use to send signals.
 // Note that for older NeoPixel strips you might need to change the third parameter--see the strandtest
 // example for more information on possible values.
-Adafruit_NeoPixel NeoPixel = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_RGBW + NEO_KHZ800);
+Adafruit_NeoPixel NeoPixel = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 //char buff[40];
 
@@ -32,9 +32,7 @@ Adafruit_NeoPixel NeoPixel = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_RGBW + NEO_KH
  *    that you want to control with fade. When creating instance, simply give 
  *    integer of position in pixel strip. 
  */
-Pixel Center(0);
-Pixel Down(1);
-Pixel Up(2);
+Pixel Fader(0);
 
 //Pixel P3(2);
 
