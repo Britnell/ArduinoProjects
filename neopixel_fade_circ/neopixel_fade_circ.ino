@@ -16,7 +16,7 @@
 #define PIN            4
 
 // How many NeoPixels are attached to the Arduino?
-#define NUMPIXELS      7
+#define NUMPIXELS      24
 
 // When we setup the NeoPixel library, we tell it how many neoPixel, and which pin to use to send signals.
 // Note that for older NeoPixel strips you might need to change the third parameter--see the strandtest
@@ -27,7 +27,7 @@ Adafruit_NeoPixel neoPixel = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_RGBW + NEO_KH
 
 //Pixel P1 = Pixel(0);
 //Pixel P2 = Pixel(1);
-#define N_PIX   7
+#define N_PIX   NUMPIXELS
 
 Pixel* Pixels;
 

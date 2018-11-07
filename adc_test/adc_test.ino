@@ -16,7 +16,7 @@
 #define VREF    5.0
 
 #define led_pin   5
-#define adc_pin   0
+#define adc_pin   4
   
   
 float get_volt(int adc){
@@ -170,6 +170,7 @@ void ADC_Setup( ){
     // AREF = Vcc   ( 3 / 5 V )
     CLEAR(ADMUX, 6);
     CLEAR(ADMUX, 7);
+    
     
     /*   Left ADJUST
     *     ADLAR = 1
