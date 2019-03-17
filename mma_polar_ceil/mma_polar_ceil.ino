@@ -1,4 +1,7 @@
-/*    Calculates Polar coordinates from accelerometer acceleration values.
+/*    
+ *     Can I use polar coordinated to point at the ceiling??
+ *     
+ *     Calculates Polar coordinates from accelerometer acceleration values.
  *       as full accel magnitude, in g * 1000 
  *       angle in X-Y-plane
  *       z-axis angle of vortical, 100 = full face up, -100 = face down
@@ -84,18 +87,6 @@ void loop()
     sprintf(buff,"  mag %d \t z %d \t   = %d \n", mag, z, phi );   Serial.print(buff);
   }
   
-    // ** Scale Z angle to LED brightness
-  if(0){
-    int paint;  
-    if( phi <  -30)
-      paint = 80;
-    else if(phi<50)
-      paint = int( map(phi,  -30, 50, 80, 0) );
-    else
-      paint = 0;
-    paint_all( paint/3, 1, paint/2);
-  }
-
   // print complete Polar Coordinates
   //sprintf(buff,"Polar Coordinates : \t %d g \t  @ %d deg \t // %d phi \n", mag, angle, phi );   Serial.print(buff);
   sprintf(buff,"Polar : \t  @ %d deg \t // %d phi \n", angle, phi );   Serial.print(buff);
