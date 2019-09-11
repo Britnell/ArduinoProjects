@@ -63,13 +63,14 @@ void setup() {
   NeoPixel.show();
   delay(1000);
 
-  set_draw_all( 0, 5, 0 );
+  for(uint8_t f=0; f<PIXELS; f++)
+  {
+    myStrip[f].fadeTo( random(30), random(10), 0,  random(1,10) );
+    draw_pixel( &myStrip[f] );
+  }
   NeoPixel.show();
   delay(1000);
 
-  set_draw_all( 0, 0, 5 );
-  NeoPixel.show();
-  delay(1000);
   // Eo setup
 }
 
@@ -78,9 +79,33 @@ void setup() {
 
 void loop() {
 
+  for(uint8_t f=0; f<PIXELS; f++)
+  {
+    if(!myStrip[f].fade()){
+      // fade to new col
+      int r = random(30,60);
+      int g = random(r/3);
+      myStrip[f].fadeTo( r, g, 0, random(5,10) );
+//      Serial.print(" new ");  
+//      Serial.print(f); Serial.print(" ] :\t"); 
+//      Serial.print(myStrip[f].R()); Serial.print("\t"); 
+//      Serial.println(myStrip[f].G());      
+    }
+    else{
+//      if(f==0){
+//        Serial.print(" \t stp +\t");  
+//        Serial.print(myStrip[f].R()); Serial.print("\t"); 
+//        Serial.println(myStrip[f].G());      }
+    }
+    draw_pixel( &myStrip[f] );
+  }
   
-  delay(interval); 
-
+  NeoPixel.show();
+  delay(120); 
+    
+//  LowPower.idle(random_sleep(0,2), ADC_OFF, TIMER4_OFF, TIMER3_OFF, TIMER1_OFF, 
+//        TIMER0_OFF, SPI_OFF, USART1_OFF, TWI_OFF, USB_OFF);
+  
   // Eo **  loop
 }
 
@@ -117,48 +142,39 @@ void draw_all( ){
 
 // * hue (index) is a value between 0 and 767. 
 // 
-period_t random_sleep(){
+period_t random_sleep(int a, int b){
   
-  int coin = random(2); 
-  // 2 = 0.5 or 1s
-  // 3= up to 1s
-  // 4 = up to 2s
+  int coin = random(a,b+1); 
   
   __D Serial.print("Random sleep for " ); 
   __D Serial.println(coin ); 
   
-  // SLEEP_120MS,   LEEP_250MS,  SLEEP_500MS,  SLEEP_1S,  SLEEP_2S,  SLEEP_4S,  SLEEP_8S,
-  
-  if(coin==0)
-    return SLEEP_500MS;
-    
-  else if(coin==1)
-    return SLEEP_1S;
-    
-  else if(coin==2)
-    return SLEEP_2S;
-    
-  else if(coin==3)
-    return SLEEP_4S;
-    
-  else if(coin==4)
-    return SLEEP_8S;
+//  int [] dur = [ SLEEP_120MS,   LEEP_250MS,  SLEEP_500MS,  SLEEP_1S,  SLEEP_2S,  SLEEP_4S,  SLEEP_8S ];
+
+  if(coin==0)         return SLEEP_120MS;
+  else if(coin==1)    return SLEEP_250MS;
+  else if(coin==2)    return SLEEP_500MS;
+  else if(coin==3)    return SLEEP_1S;
+  else if(coin==4)    return SLEEP_2S;
+  else if(coin==5)    return SLEEP_4S;
+  else if(coin==6)    return SLEEP_8S;
+  else                return SLEEP_250MS;
 }
 
 
-void hsb2rgbAN2(uint16_t index, uint8_t sat, uint8_t bright, uint8_t color[3]) {
-    uint8_t temp[5], n = (index &gt;&gt; 8) % 3;
-// %3 not needed if input is constrained, but may be useful for color cycling and/or if modulo constant is fast
-    uint8_t x = ((((index &amp; 255) * sat) &gt;&gt; 8) * bright) &gt;&gt; 8;
-// shifts may be added for added speed and precision at the end if fast 32 bit calculation is available
-    uint8_t s = ((256 - sat) * bright) &gt;&gt; 8;
-    temp[0] = temp[3] =              s;
-    temp[1] = temp[4] =          x + s;
-    temp[2] =          bright - x    ;
-    color[RED]  = temp[n + 2];
-    color[GREEN] = temp[n + 1];
-    color[BLUE]  = temp[n    ];
-}
+//void hsb2rgbAN2(uint16_t index, uint8_t sat, uint8_t bright, uint8_t color[3]) {
+//    uint8_t temp[5], n = (index &gt;&gt; 8) % 3;
+//// %3 not needed if input is constrained, but may be useful for color cycling and/or if modulo constant is fast
+//    uint8_t x = ((((index &amp; 255) * sat) &gt;&gt; 8) * bright) &gt;&gt; 8;
+//// shifts may be added for added speed and precision at the end if fast 32 bit calculation is available
+//    uint8_t s = ((256 - sat) * bright) &gt;&gt; 8;
+//    temp[0] = temp[3] =              s;
+//    temp[1] = temp[4] =          x + s;
+//    temp[2] =          bright - x    ;
+//    color[RED]  = temp[n + 2];
+//    color[GREEN] = temp[n + 1];
+//    color[BLUE]  = temp[n    ];
+//}
 
 
 // *

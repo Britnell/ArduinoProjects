@@ -11,7 +11,7 @@
 #define PIN         10
 #define PIXELS      6
 
-#define DEBUG   0
+#define DEBUG   1
 #define __D     if(DEBUG)
 
 Adafruit_NeoPixel NeoPixel = Adafruit_NeoPixel(PIXELS, PIN, NEO_RGB + NEO_KHZ800);
