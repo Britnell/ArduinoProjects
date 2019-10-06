@@ -1,3 +1,9 @@
+/*
+ *  Arduino mic peak detection
+ *    detects a loud noise such as word, shout or blow into the mic
+ *    no filtering so subsceptible to background noise
+ */
+
 #define ADC   A0
 #define N_AVRG  10
 
@@ -16,7 +22,7 @@ long last_average = 0;
 long blow_time = 0;
 
 void loop() {
-
+  
   // * Read
   
   int vai = analogRead(ADC);

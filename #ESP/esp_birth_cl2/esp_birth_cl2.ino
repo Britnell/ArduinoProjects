@@ -3,6 +3,7 @@
  *   then summing days of year so far + seconds of day so far
  *   for a very serious and global number of seconds alive.
  *  
+ *  First shelf version
  */
 
 
@@ -11,6 +12,9 @@
 #include <Adafruit_NeoPixel.h>
 
 
+#define DEBUG   1
+#define _P(x)     if(DEBUG)
+
 //const char* ssid = "<your WiFi SSID>";
 //const char* password = "<your WiFi Password>";
 const char* ssid = "KDG-3798D";
@@ -18,7 +22,7 @@ const char* password = "fA4cXNhfB5uX";
 
                                                         // ** Neopixel
 #define PIN     D2
-#define PIXELS  100
+#define PIXELS  34
 
 Adafruit_NeoPixel neoStrip = Adafruit_NeoPixel(PIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
@@ -74,7 +78,6 @@ void setup() {
   randomSeed(analogRead(0));
   
   Serial.begin(115200);
-  Serial.println();
   Serial.print("Wifi connecting to ");
   Serial.println( ssid );
 
@@ -82,7 +85,7 @@ void setup() {
 
   Serial.println();
   
-  Serial.print("Connecting");
+  __P("Connecting");
 
   while( WiFi.status() != WL_CONNECTED ){
       delay(500);
@@ -112,7 +115,7 @@ void setup() {
   stopwatch = millis();
   
   while( p_tm->tm_year == 70){  // year = 1970
-    Serial.print("...\t");
+    Serial.print("...");
     delay(900);
     now = time(nullptr);
     p_tm = localtime(&now);
@@ -124,8 +127,9 @@ void setup() {
 
   // days passed from 10.10.1990 to 31.12.2017    = 9945
   // https://www.timeanddate.com/date/durationresult.html?d1=10&m1=10&y1=1990&d2=1&m2=1&y2=2018
-  lifetime = 9945;
-  //Serial.print("days from 1990 to 2017 : ");  Serial.println(lifetime);
+  lifetime = 9945;    // Tommy i.e. 10.10.1990
+  //lifetime = 22128;  // Si 
+  //Serial.print("days from 1990 to 31.12.2017 : ");  Serial.println(lifetime);
   
   int daysThisYear = daysUntilThisMonth((p_tm->tm_mon)+1);
   daysThisYear += (p_tm->tm_mday) -1;    // -1 for days PASSED
@@ -185,7 +189,7 @@ void loop() {
       else {     // LO
         col = neoStrip.Color( Ron/30, Gon/30, Bon/30 );
       }
-      neoStrip.setPixelColor( l, col );
+      neoStrip.setPixelColor( l+1, col );
       // Eo for
     }
     neoStrip.show();
@@ -194,9 +198,9 @@ void loop() {
     //if( random(100) <= 20 ) {
     random_rgb();
 
-    Serial.print( Ron/30);  Serial.print(",\t");
-    Serial.print(Gon/30);  Serial.print(",\t");
-    Serial.print(Bon/30 );  Serial.print("\n");
+//    Serial.print( Ron/30);  Serial.print(",\t");
+//    Serial.print(Gon/30);  Serial.print(",\t");
+//    Serial.print(Bon/30 );  Serial.print("\n");
     delay(100);
   }
   
