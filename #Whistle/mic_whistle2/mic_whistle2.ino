@@ -8,7 +8,7 @@
  */
 
 #include <fix_fft.h>
-#define ADC   A0
+#define ADC   A3
 #define pt(x)   Serial.print(x)
 #define pl(x)   Serial.println(x)
 
@@ -34,7 +34,7 @@ byte data[FFT_N], im[FFT_N], data_avgs[8];
 #define LPF     3
 int whistleGap = 500;
 
-byte bandMin = 5;       byte bandMax = 30;  
+byte bandMin = 14;       byte bandMax = 24;  
 
 long lastWhistle = 0;
 float whistles[LPF];
@@ -44,8 +44,6 @@ uint8_t whistleFlag = 0;
 
 void loop() {
   int i, j;
-  
-  // * Read
 
   // ADjustable gain : 
   // average ~511
@@ -55,7 +53,7 @@ void loop() {
   // * FFT
   
   for(i = 0; i < FFT_N; i++) {
-    data[i] = analogRead(ADC);
+    data[i] = (analogRead(ADC) >> 8);
     im[i] = 0;
   }
   fix_fft(data,im,7,0); // ; 7= m for order ; 0 for forward FFT
@@ -111,47 +109,42 @@ void loop() {
     // for - peak
   }
 
-  // * peak ratio
-  if(Max>5)
+  // * Peak filtering
+  if( MaxB>13 && MaxB<28 )
   {
+    float ratio;
+    if(Vice!=0)
+      ratio = 1.0 * Max / Vice;
+    else{
+      ratio = 1.0 * Max;      
+    }
+    
     // * print spectrum
-    //    for(i=bandMin; i<=bandMax; i++) 
-    //    {    pt(data[i]); pt("\t");      }
-    //    pt("\n");
-    
-    float ratio = 1.0 * Max / Vice;
-    uint8_t WHIS = 0;
-    
-    // for high ratio or if neighbours
-    if(ratio > 2.0 ){
-      WHIS = 1;
-    }
-    else if( abs(MaxB-ViceB) < 2 && ratio > 1.0 ){
-      WHIS = 1;
-    }
+        for(i=bandMin; i<=bandMax; i++) 
+        {    pt(data[i]); pt("\t");      }
+        pt("\n");
 
-    if(WHIS){
-      // * print peaks
-    //      pt(" # Ratio \t"); pt(ratio);
-    //      pt("\tPeak\t");  pt(MaxB);  pt("  :  ");  pt(Max); 
-    //      pt("\t   Vice\t");  pt(ViceB);  pt("  :  ");  pt(Vice);
-    //      pl();
+    
+    // * print peaks
+//        pt("\tPeak\t[");  pt(MaxB);  pt("]: ");  pt(Max); 
+//        pt(" \t // R  "); pt(ratio);
+//        pt("\t   Vice\t[");  pt(ViceB);  pt("]: ");  pt(Vice);
+//        pl();
+        
       // * interpolate with neighbours
-      int total = 0;    // get total
-      total += data[MaxB];
-      total += data[MaxB-1];
-      total += data[MaxB+1];
-      
-      float freq = 0;   // get distribution / total
-      freq += 1.0*(MaxB-1) *data[MaxB-1] /total;
-      freq += 1.0*(MaxB) *data[MaxB] /total;
-      freq += 1.0*(MaxB+1) *data[MaxB+1] /total;    
+//      int total = 0;    // get total
+//      total += data[MaxB];
+//      total += data[MaxB-1];
+//      total += data[MaxB+1];
+//      
+//      float freq = 0;   // get distribution / total
+//      freq += 1.0*(MaxB-1) *data[MaxB-1] /total;
+//      freq += 1.0*(MaxB) *data[MaxB] /total;
+//      freq += 1.0*(MaxB+1) *data[MaxB+1] /total;    
+//
+//      pt(" # Whistle : ");    pt(freq);
+//      pl();
 
-      pt(" # Whistle : ");    pt(freq);
-      pl();
-
-      // * 
-    }
       
     // if Max lim
   }

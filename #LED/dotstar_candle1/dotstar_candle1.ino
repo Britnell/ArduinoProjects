@@ -29,23 +29,24 @@ int      head  = 0, tail = -2; // Index of first 'on' and 'off' pixels
 uint32_t color = 0xFF0000;      // 'On' color (starts red)
 int led = 0;
 
-float baseX = 4.5;
-float baseY = 2.2;
-float flameWaist = 3.9;
-float flameBase = 1.0;
-
 double candleSlope = 0.2;
+float baseX = 4.5;
+
+float baseY = 2.2;
+float flameWaist = 4.4;
+float flameBase = 1.2;
+float flameTip = 0.6;
 
 // * Vary flame base
-  int baseRanFreq = 5;
-  int baseRan = 80;  // mag of random var
-  int baseXret = 2000;
+  int baseRanFreq = 30;
+  int baseRanStep = 30;  // mag of random var
+//  int baseXret = 2000;
   
   
 // * Vary flame slope
-  int slopeRanFreq = 5;
-  float slopeLim = 3.0;
-  float slopeStep = 0.01;
+  int slopeRanFreq = 60;
+  float slopeLim = 2.8;
+  float slopeStep = 0.015;
   float slopeReturn = 0.3;
   
 
@@ -83,7 +84,7 @@ void loop() {
         float width = flameBase;
         
         if(r>flameWaist)
-          width = map_f(r, flameWaist,7, flameBase,0.5 );
+          width = map_f(r, flameWaist,7, flameBase,flameTip );
         
         if( dist <width ){
           bright = map_f(dist,0,width,255,0);
@@ -106,7 +107,7 @@ void loop() {
     
   
   // * Flame random slope
-  if(random(100)<slopeRanFreq) {
+  if(random(1000)<slopeRanFreq) {
     candleSlope = float(random(-30,30)) / 10;
   }
   // * flame slope return
@@ -119,9 +120,9 @@ void loop() {
   if(random(1000)<baseRanFreq)
   {
     pt("R:\t");
-    baseX += float(random(-baseRan,baseRan)) /100;
-    if(baseX > 5.9)  baseX = 5.9;
-    if(baseX < 3.1)  baseX = 3.1;
+    baseX += float(random(-baseRanStep,baseRanStep)) /100;
+    if(baseX > 5.4)  baseX = 5.4;
+    if(baseX < 1.6)  baseX = 1.6;
 
   }
   // * base return
@@ -146,12 +147,12 @@ void loop() {
 void draw_base(float bright)
 {
   uint8_t r,g,b;
-  float dim = 1.8;
+  float dim = 2.0;
   r = int(bright/dim);
   g = int(bright/dim*2/3);
   
   //b = int((bright+16)/dim/5);
-  if(bright>0)     b = int((bright)/10)+8;
+  if(bright>0)     b = int((bright)/20)+8;
   else             b = 0;
   
 
@@ -168,7 +169,7 @@ void draw_base(float bright)
 void draw_brightness(float bright){
   
   uint8_t r,g,b;
-  uint8_t dim = 2;
+  float dim = 2.0;
   r = int(bright/dim);
   g = int(bright/dim*2/3);
   b = 0;

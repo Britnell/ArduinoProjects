@@ -16,7 +16,7 @@ I will then add it as a demo (with proper attribution).
 const int duration = 5000; //number of loops to run each animation for
 
 #define NUMBEROFPIXELS 11 //Number of LEDs on the strip
-#define PIXELPIN 9 //Pin where WS281X pixels are connected
+#define PIXELPIN 2 //Pin where WS281X pixels are connected
 
 #include "Arduino.h"
 #include <Adafruit_NeoPixel.h>

@@ -77,7 +77,7 @@ int daysAfterThisMonth( uint8_t currMonth){
 }
 
 unsigned long lifetime;
-int INTVL = 1000;   // 1000 ms for RTC
+int INTVL = 300;   // 1000 ms for RTC
 int Ron, Gon, Bon;
 static int randomStep, randomMax;
   
@@ -89,8 +89,8 @@ char buff[50];
 void setup() {
   
   Ron = 0;
-  Gon = 80;
-  Bon = 10;
+  Gon = 40;
+  Bon = 5;
 
   randomStep = 5;
   randomMax = 120;
@@ -389,10 +389,12 @@ void loop() {
       // l = bit
       uint32_t col;
       if( get_bit_ul(lifetime, l) ){       // HI
-        col = neoStrip.Color(Ron, Gon, Bon);
+        
+//        col = neoStrip.Color(Ron, Gon, Bon);
+          col = get_col_val(l);
       }
       else {     // LO
-        col = neoStrip.Color( Ron/30, Gon/30, Bon/30 );
+        col = neoStrip.Color( 0,0,0 );
       }
       neoStrip.setPixelColor( l+1, col );
       // Eo for
@@ -411,6 +413,38 @@ void loop() {
   
 //  delay(1000);
 }
+
+
+uint32_t get_col_val(uint8_t l){
+  uint8_t r,g,b;
+  if(l<6) { // bit1-6
+    r = map(l, 0,5, 50,10 );
+    g = 0;
+    b = 0;
+  }
+  else if(l< 12 ) { // bit 7-12
+    r = map(l, 6,11, 40,20 );
+    g = map(l, 6,11, 10, 5 );
+    b = 0;
+  }
+  else if(l < 17) { // 13 to 17
+    r = 0;
+    g = map(l, 12,16, 40,20 );
+    b = map(l, 12,16, 0,20 );
+  }
+  else if(l < 12) { // 18 to 22
+    r = 0;
+    g = 0;
+    b = map(l, 16,21, 50,20 );
+  }
+  else {
+    r = 5;
+    g=5;
+    b=5;
+  }
+  return neoStrip.Color(r, g, b);
+}
+          
 
 
 
