@@ -1,17 +1,16 @@
 
 
 #include <Adafruit_DotStar.h>
-#include <SPI.h>         // COMMENT OUT THIS LINE FOR GEMMA OR TRINKET
+#include <SPI.h>        
 
+#define PT_EN    0
+#define pt(x)    if(PT_EN) Serial.print(x)
+#define pl(x)    if(PT_EN) Serial.println(x)
 
 #define NUMPIXELS 64 // 
 #define DATAPIN    2
 #define CLOCKPIN   3
 Adafruit_DotStar strip(NUMPIXELS, DATAPIN, CLOCKPIN, DOTSTAR_BRG);
-
-#define PT_EN     0
-#define pt(x)    if(PT_EN) Serial.print(x)
-#define pl(x)    if(PT_EN) Serial.println(x)
 
 void setup() {
   if(PT_EN) Serial.begin(115200);
@@ -29,30 +28,33 @@ int      head  = 0, tail = -2; // Index of first 'on' and 'off' pixels
 uint32_t color = 0xFF0000;      // 'On' color (starts red)
 int led = 0;
 
-double candleSlope = 0.2;
-float baseX = 4.5;
+float dim = 1.6;
 
-float baseY = 2.2;
-float flameWaist = 4.4;
-float flameBase = 1.2;
-float flameTip = 0.6;
+double candleSlope = 0.2;
+float baseX = 3.1;
+float baseMin = 1.8;
+float baseMax = 6.2;
+
+float baseY = 2.2;      // static base drawn up to here
+float flameWaist = 4.9; // height from which is narrows
+float flameBase = 1.6;  // width of base, below waist
+float flameTip = 0.8;   // width at tip
 
 // * Vary flame base
-  int baseRanFreq = 30;
-  int baseRanStep = 30;  // mag of random var
+  int baseRanFreq = 60;
+  int baseRanStep = 20;  // mag of random var
 //  int baseXret = 2000;
   
   
 // * Vary flame slope
-  int slopeRanFreq = 60;
+  int slopeRanFreq = 30;  // prob /1000 of adding random slope
   float slopeLim = 2.8;
-  float slopeStep = 0.015;
+  float slopeStep = 0.029;  // 0.015
   float slopeReturn = 0.3;
   
 
 void loop() {
 
-  
   
   led = 0;
   for( int r=0; r<8; r++)
@@ -65,7 +67,8 @@ void loop() {
       {
         // * bottom rows 
         if( abs(baseX-c)<flameBase ){ // if inside flame base
-          bright = map_f(r,0.0,baseY, 1.0,255.0);
+          //bright = map_f(r,0.0,baseY, 1.0,255.0);
+          bright = map_f( abs(baseX-c), 0,flameBase, 80.0*r, 1.0 );
         }
         else{
           bright = 0.0;
@@ -87,13 +90,13 @@ void loop() {
           width = map_f(r, flameWaist,7, flameBase,flameTip );
         
         if( dist <width ){
-          bright = map_f(dist,0,width,255,0);
+          bright = map_f(dist,0,width,255,30);
         }
         else{
           bright = 0;
         }   
         
-        draw_brightness(bright);
+        draw_brightness(bright,r);
       }
       
       
@@ -108,8 +111,10 @@ void loop() {
   
   // * Flame random slope
   if(random(1000)<slopeRanFreq) {
-    candleSlope = float(random(-30,30)) / 10;
+    candleSlope = float(random(-35,35)) / 10;
+    pt(" slope ran : ");  pl(candleSlope);
   }
+  
   // * flame slope return
   if(candleSlope<-slopeReturn)
       candleSlope += slopeStep;
@@ -119,35 +124,30 @@ void loop() {
   // * random base
   if(random(1000)<baseRanFreq)
   {
-    pt("R:\t");
     baseX += float(random(-baseRanStep,baseRanStep)) /100;
-    if(baseX > 5.4)  baseX = 5.4;
-    if(baseX < 1.6)  baseX = 1.6;
-
+    if(baseX > baseMax)  baseX = baseMax;
+    if(baseX < baseMin)  baseX = baseMin;
+    pt("Ran base :\t"); pl(baseX);
   }
-  // * base return
-//  if(baseX > 3.52)  baseX -= 1.0 / baseXret;
-//  if(baseX < 3.48)  baseX += 1.0 / baseXret;
   
   
-  if(millis()-t>100)
-  {
-    pt(candleSlope); pt("\t"); pt(baseX);       pl();
+  if(millis()-t>100)  {
+    pt("pt: ");  pt(candleSlope); pt("\t"); pt(baseX);       pl();
     t = millis();
   }
-//  pt(candleSlope); pt("\t"); pt(baseX);       pl();
   
   strip.show();                     // Refresh strip
-//  delay(10);
+//  delay(5);
 
   // Eo loop
 }
 
 
+
 void draw_base(float bright)
 {
   uint8_t r,g,b;
-  float dim = 2.0;
+//  float dim = 2.0;
   r = int(bright/dim);
   g = int(bright/dim*2/3);
   
@@ -166,13 +166,23 @@ void draw_base(float bright)
   led++;
 }
 
-void draw_brightness(float bright){
+void draw_brightness(float bright, int coll){
   
   uint8_t r,g,b;
-  float dim = 2.0;
+  
   r = int(bright/dim);
   g = int(bright/dim*2/3);
-  b = 0;
+    
+  if(coll>flameWaist){
+    // quite yellowy
+    b = map_f(bright,0,255,0,(coll-flameWaist)*40) / dim;
+//    if(bright>230) b = map_f(bright,220,255,0,30);
+  }
+  else{
+    // slightly more red-ish
+    b = 0;
+  }
+  
 
   uint32_t col = g;
   col = (col<<8);
@@ -191,4 +201,3 @@ float map_f( float val, float Min, float Max, float OMin, float OMax)
   float res = OMin + ratio * (OMax-OMin);
   return res;
 }
-
