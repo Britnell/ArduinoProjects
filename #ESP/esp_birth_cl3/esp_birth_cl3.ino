@@ -418,13 +418,13 @@ void loop() {
 uint32_t get_col_val(uint8_t l){
   uint8_t r,g,b;
   if(l<6) { // bit1-6
-    r = map(l, 0,5, 50,10 );
+    r = map(l, 0,5, 10,50 );
     g = 0;
     b = 0;
   }
   else if(l< 12 ) { // bit 7-12
-    r = map(l, 6,11, 40,20 );
-    g = map(l, 6,11, 10, 5 );
+    r = map(l, 6,11, 20,40 );
+    g = map(l, 6,11, 5, 10 );
     b = 0;
   }
   else if(l < 17) { // 13 to 17
