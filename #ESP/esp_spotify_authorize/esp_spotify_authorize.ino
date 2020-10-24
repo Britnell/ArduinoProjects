@@ -26,11 +26,6 @@ const int httpsPort = 443;  //HTTPS= 443 and HTTP = 80
 // * SHA Fingerprints https://www.grc.com/fingerprints.htm
 const char fingerprint[] PROGMEM = "B9 79 6B CE FD 61 21 97 A7 02 90 EE DA CD F0 A0 44 13 0E EB";
 
-const char clientId[] PROGMEM    = "954d83a67fde4133bcf00cc20bb618b3";
-const char clientSecret[] PROGMEM = "9f6cc5fdeff24200b36c3f7d40024f1c";
-
-const char redirectURI[] PROGMEM = "http://192.168.68.119/callback";
-const char redirectEscape[] PROGMEM = "http%3A%2F%2F192.168.68.119%2Fcallback";
 
 //AsyncWebServer server(80);
 ESP8266WebServer server(80);
