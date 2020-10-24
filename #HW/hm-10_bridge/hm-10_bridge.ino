@@ -16,9 +16,9 @@
  
  
 #include <SoftwareSerial.h>
-SoftwareSerial BTserial(2, 3); // RX | TX
+SoftwareSerial BTserial(2,3); // ( RX, TX )
  
-const long baudRate = 9600;   // HM-10 Default : 9600
+const long baudRate = 9600;   // HM-10 Default : 9600 ; 115200
 
 
 char PCbuff[50];
@@ -30,7 +30,8 @@ void setup()
 {
     Serial.begin(baudRate);
     BTserial.begin(baudRate);  
-    
+
+    delay(1000);
     Serial.print("BTserial started at "); Serial.println(baudRate);
     Serial.println(" ");
   
@@ -54,6 +55,7 @@ void loop()
       c = Serial.read();
       BTserial.write(c);
     }
+    
     // Read from the Serial Monitor and send to the Bluetooth module
 //    if (Serial.available())
 //    {
